@@ -23,7 +23,11 @@ RUN apt-get update && apt-get install -y \
     git \
     netcat \
     vim \
-    sudo
+    sudo \
+    openssh \
+    && echo "root:Docker!" | chpasswd
+
+COPY sshd_config /etc/ssh/
 
 ###############################################################################
 # Ruby, Rubygems, and Bundler Defaults
@@ -88,6 +92,8 @@ RUN mkdir -p tmp/pids/
 
 # Run these scripts
 ENTRYPOINT [ "entrypoints/docker-entrypoint.sh" ]
+
+EXPOSE 80 2222
 
 # Default to run this command unless overriden in docker-compose file
 CMD [ "bundle", "exec", "puma", "-C", "config/puma.rb" ]
